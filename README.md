@@ -8,6 +8,8 @@
 
 ## Externe Abhängigkeiten
 
+GDAL...
+
 ## Interne Struktur
 
 ## Entwicklung
