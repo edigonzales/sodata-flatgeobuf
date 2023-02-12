@@ -16,7 +16,7 @@ public class ConverterService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static final String PYTHON = "python";
-    private static final String SOURCE_FILE_NAME = "gpgk2fgb.py";
+    private static final String SOURCE_FILE_NAME = "FlatGeobufConverter.py";
 
     @PostConstruct
     public void init() throws IOException {        
