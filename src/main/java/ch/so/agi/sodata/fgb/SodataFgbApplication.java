@@ -1,5 +1,6 @@
 package ch.so.agi.sodata.fgb;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,4 +22,18 @@ public class SodataFgbApplication {
         return new ForwardedHeaderFilter();
     }
 
+
+    // TODO
+    // Nur Zwecks erstmaligen Entwickeln hier.
+    // Später dauert die Konvertierung zu lange.
+    // Vielleicht sowas:
+    // Eventuell lohnt sich eine eigener Actuator. Dann kann man die Anwendung hochfahren und sie ist live UND ready.
+    // Mit Scheduler ausführen und mit simplen Key (als env var)
+
+    @Bean
+    CommandLineRunner init(ConverterService converterService) {
+        return args -> {            
+            converterService.convert();
+        };
+    }
 }

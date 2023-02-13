@@ -3,6 +3,7 @@
 venv/
 venv.zip
 
+.gradle
 bin
 ./gradle
 

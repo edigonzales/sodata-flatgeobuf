@@ -17,7 +17,7 @@ GDAL...
 ### Prepare
 
 ```
-multipass launch jammy --cpus 4 --disk 20G --mem 8G --name sodata-fgb
+multipass launch jammy --cpus 4 --disk 20G --memory 8G --name sodata-fgb
 multipass mount $HOME/sources sodata-fgb:/home/ubuntu/sources
 multipass shell sodata-fgb
 multipass stop sodata-fgb
