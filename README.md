@@ -19,6 +19,7 @@ GDAL...
 ```
 multipass launch jammy --cpus 4 --disk 20G --memory 8G --name sodata-fgb
 multipass mount $HOME/sources sodata-fgb:/home/ubuntu/sources
+multipass mount $HOME/tmp sodata-fgb:/home/ubuntu/tmp
 multipass shell sodata-fgb
 multipass stop sodata-fgb
 ```
@@ -42,9 +43,15 @@ sudo apt-get -y install gdal-bin
 ### Run
 
 ```
-./mvnw spring-boot:run
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 ### Build
 
 
+
+
+ogr2ogr -f FlatGeobuf foo.fgb  /vsizip/ch.so.afu.abbaustellen.gpkg.zip/ch.so.afu.abbaustellen.gpkg "abbaustelle"
+ogr2ogr -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"
+
+ogr2ogr -lco TEMPORARY_DIR=/tmp/ -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"

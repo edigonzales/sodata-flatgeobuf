@@ -1,5 +1,8 @@
 package ch.so.agi.sodata.fgb;
 
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Version;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +25,14 @@ public class SodataFgbApplication {
         return new ForwardedHeaderFilter();
     }
 
+    @Bean 
+    HttpClient createHttpClient() {
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(Version.HTTP_1_1)
+                //.followRedirects(Redirect.NEVER)
+                .build();
+        return httpClient;
+    }
 
     // TODO
     // Nur Zwecks erstmaligen Entwickeln hier.
