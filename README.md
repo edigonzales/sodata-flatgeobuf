@@ -1,5 +1,7 @@
 # sodata-flatgeobuf
 
+- todo: Testen http get range: https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests
+
 ## Beschreibung
 
 ## Komponenten
@@ -49,9 +51,3 @@ sudo apt-get -y install gdal-bin
 ### Build
 
 
-
-
-ogr2ogr -f FlatGeobuf foo.fgb  /vsizip/ch.so.afu.abbaustellen.gpkg.zip/ch.so.afu.abbaustellen.gpkg "abbaustelle"
-ogr2ogr -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"
-
-ogr2ogr -lco TEMPORARY_DIR=/tmp/ -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"

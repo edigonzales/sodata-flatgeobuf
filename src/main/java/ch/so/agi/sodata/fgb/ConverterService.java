@@ -86,12 +86,13 @@ public class ConverterService {
                         } else {
                             convertDataset(identifier);
                         }
-                    } catch (URISyntaxException | InterruptedException e) {
+                    } catch (URISyntaxException | IOException | InterruptedException e) {
                         log.error(e.getMessage());
                     }
                     
-                    //https://files.geo.so.ch/ch.so.afu.abbaustellen/aktuell/ch.so.afu.abbaustellen.gpkg.zip
-
+                    
+                    
+                    
                 }
             }
         }
@@ -140,7 +141,6 @@ public class ConverterService {
                         log.debug("tablename: " + rs.getString("tablename"));
                     }
             }  catch (SQLException e) {
-                e.printStackTrace();
                 throw new IllegalArgumentException(e.getMessage());
             }
         } catch (SQLException e) {
@@ -148,10 +148,12 @@ public class ConverterService {
         }
 
         // Konvertieren
-        
+        // System.getProperty("java.io.tmpdir")
+        // ogr2ogr -lco TEMPORARY_DIR=/tmp/ -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"
         
         
         // Hochladen
+        //https://github.com/edigonzales/ilivalidator-jobrunr/blob/eccdff794b/src/main/java/ch/so/agi/ilivalidator/StorageService.java
     }
     
     private static void saveFile(InputStream body, String destinationFile) throws IOException {
