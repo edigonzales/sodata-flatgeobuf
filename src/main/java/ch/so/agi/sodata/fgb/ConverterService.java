@@ -141,17 +141,41 @@ public class ConverterService {
                         log.debug("tablename: " + rs.getString("tablename"));
                     }
             }  catch (SQLException e) {
-                throw new IllegalArgumentException(e.getMessage());
+                log.error(e.getMessage());
+                return;
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            log.error(e.getMessage());
+            return;
         }
 
         // Konvertieren
-        // System.getProperty("java.io.tmpdir")
-        // ogr2ogr -lco TEMPORARY_DIR=/tmp/ -f FlatGeobuf foo.fgb  ch.so.agi.av_gb_administrative_einteilungen.gpkg "grundbuchkreise_grundbuchkreis"
-        
-        
+        String osTmpDir = System.getProperty("java.io.tmpdir");
+        for (String tableName : tableNames) {
+            String outputFile = Paths.get(tmpWorkDir.toFile().getAbsolutePath(), tableName + ".fgb").toFile().getAbsolutePath();
+            log.debug(outputFile);
+            
+            try {
+                ProcessBuilder pb = new ProcessBuilder("ogr2ogr", "-lco", "TEMPORARY_DIR="+osTmpDir, "-f", "FlatGeobuf", outputFile, gpkgFile.getAbsolutePath(), tableName);
+                log.debug(pb.command().toString());
+
+                Process p = pb.start();
+                BufferedReader is = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line = null;
+                while ((line = is.readLine()) != null)
+                    log.info(line);
+                p.waitFor();
+                
+                if (p.exitValue() != 0) {
+                    log.error("ogr2ogr did not run successfully.");
+                    return;
+                }
+            } catch (IOException | InterruptedException e) {
+                log.error(e.getMessage());
+                return;
+            }
+        }
+                
         // Hochladen
         //https://github.com/edigonzales/ilivalidator-jobrunr/blob/eccdff794b/src/main/java/ch/so/agi/ilivalidator/StorageService.java
     }
@@ -160,7 +184,7 @@ public class ConverterService {
         FileOutputStream fos = new FileOutputStream(destinationFile);
         fos.write(body.readAllBytes());
         fos.close();
-}
+    }
 
     // Scheduler für Converting
     
