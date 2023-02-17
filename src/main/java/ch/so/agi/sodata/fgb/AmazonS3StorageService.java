@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -37,21 +38,14 @@ public class AmazonS3StorageService implements StorageService {
 
     private S3Client s3client;
     
-    
-    // Postconstruct
-    
-    @Autowired
-    public AmazonS3StorageService() {
-        System.out.println("ddd: " + s3Region);
-        
-//        AwsCredentialsProvider creds = StaticCredentialsProvider.create(AwsBasicCredentials.create(s3AccessKey, s3SecretKey));
-//        Region region = Region.of(s3Region);
-//        s3client = S3Client.builder()
-//                .credentialsProvider(creds)
-//                .region(region)
-//                .build();
+    @PostConstruct
+    public void init() {
+        AwsCredentialsProvider creds = StaticCredentialsProvider
+                .create(AwsBasicCredentials.create(s3AccessKey, s3SecretKey));
+        Region region = Region.of(s3Region);
+        s3client = S3Client.builder().credentialsProvider(creds).region(region).build();
     }
-    
+
     @Override
     public void store(File file, String filename, String location) throws IOException {
         System.out.println("eee: " + s3Region);

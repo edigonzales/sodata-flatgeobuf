@@ -121,7 +121,6 @@ public class ConverterService {
         try {
             new ZipFile(zipFile).extractAll(tmpWorkDir.toFile().getAbsolutePath());            
         } catch (ZipException e) {
-            e.printStackTrace();
             log.error(e.getMessage());
             throw new IOException(e);
         }
@@ -141,12 +140,10 @@ public class ConverterService {
                         log.debug("tablename: " + rs.getString("tablename"));
                     }
             }  catch (SQLException e) {
-                e.printStackTrace();
                 log.error(e.getMessage());
                 return;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(e.getMessage());
             return;
         }
