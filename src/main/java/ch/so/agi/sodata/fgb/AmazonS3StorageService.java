@@ -37,6 +37,9 @@ public class AmazonS3StorageService implements StorageService {
 
     private S3Client s3client;
     
+    
+    // Postconstruct
+    
     @Autowired
     public AmazonS3StorageService() {
         System.out.println("ddd: " + s3Region);
