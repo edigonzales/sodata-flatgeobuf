@@ -45,6 +45,11 @@ sudo apt-get -y install gdal-bin
 ### Run
 
 ```
+export S3_ACCESS_KEY=xxxx
+export S3_SECRET_KEY=yyyy
+```
+
+```
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 

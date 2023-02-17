@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import ch.so.agi.meta2file.model.ThemePublication;
 import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,6 +60,9 @@ public class ConverterService {
     @Value("${app.workDirectory}")
     private String WORK_DIRECTORY;   
     
+    @Autowired
+    private AmazonS3StorageService amazonS3StorageService;
+    
     public void convert() throws XMLStreamException, IOException {        
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.registerModule(new JavaTimeModule());
@@ -79,6 +83,8 @@ public class ConverterService {
                     
                     log.debug("Identifier: "+ identifier);
                     
+                    // TODO raster vs. vector
+                    
                     try {
                         if (items.size() > 1) {
                             // TODO
@@ -87,6 +93,7 @@ public class ConverterService {
                             convertDataset(identifier);
                         }
                     } catch (URISyntaxException | IOException | InterruptedException e) {
+                        e.printStackTrace();
                         log.error(e.getMessage());
                     }
                     
@@ -95,23 +102,7 @@ public class ConverterService {
                     
                 }
             }
-        }
-        
-        try {
-            ProcessBuilder pb = new ProcessBuilder("ogr2ogr", "--version");
-            //pb.directory(new File("myDir"));
-            Process p = pb.start();
-            BufferedReader is = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            while ((line = is.readLine()) != null)
-                log.info(line);
-            p.waitFor();
-            
-            
-            
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }        
     }
     
     private void convertDataset(String identifier) throws URISyntaxException, IOException, InterruptedException {
@@ -127,8 +118,17 @@ public class ConverterService {
         saveFile(response.body(), zipFile.getAbsolutePath());
 
         // Entzippen
-        new ZipFile(zipFile).extractAll(tmpWorkDir.toFile().getAbsolutePath());
+        try {
+            new ZipFile(zipFile).extractAll(tmpWorkDir.toFile().getAbsolutePath());            
+        } catch (ZipException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new IOException(e);
+        }
         File gpkgFile = Paths.get(tmpWorkDir.toFile().getAbsolutePath(), identifier + ".gpkg").toFile();
+        
+        amazonS3StorageService.store(new File("aa"), "foo", "bar");
+
         
         // Alle Tabellen eruieren, die konvertiert werden sollen.
         List<String> tableNames = new ArrayList<String>();
@@ -141,13 +141,17 @@ public class ConverterService {
                         log.debug("tablename: " + rs.getString("tablename"));
                     }
             }  catch (SQLException e) {
+                e.printStackTrace();
                 log.error(e.getMessage());
                 return;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return;
         }
+        
+
 
         // Konvertieren
         String osTmpDir = System.getProperty("java.io.tmpdir");
@@ -156,7 +160,7 @@ public class ConverterService {
             log.debug(outputFile);
             
             try {
-                ProcessBuilder pb = new ProcessBuilder("ogr2ogr", "-lco", "TEMPORARY_DIR="+osTmpDir, "-f", "FlatGeobuf", outputFile, gpkgFile.getAbsolutePath(), tableName);
+                ProcessBuilder pb = new ProcessBuilder("ogr2ogr", "-lco", "SPATIAL_INDEX=YES", "-lco", "TEMPORARY_DIR="+osTmpDir, "-f", "FlatGeobuf", outputFile, gpkgFile.getAbsolutePath(), tableName);
                 log.debug(pb.command().toString());
 
                 Process p = pb.start();
@@ -171,6 +175,7 @@ public class ConverterService {
                     return;
                 }
             } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
                 log.error(e.getMessage());
                 return;
             }
@@ -178,6 +183,8 @@ public class ConverterService {
                 
         // Hochladen
         //https://github.com/edigonzales/ilivalidator-jobrunr/blob/eccdff794b/src/main/java/ch/so/agi/ilivalidator/StorageService.java
+        
+        
     }
     
     private static void saveFile(InputStream body, String destinationFile) throws IOException {
