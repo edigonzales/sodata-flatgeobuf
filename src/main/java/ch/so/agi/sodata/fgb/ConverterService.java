@@ -148,8 +148,6 @@ public class ConverterService {
             return;
         }
         
-
-
         // Konvertieren
         String osTmpDir = System.getProperty("java.io.tmpdir");
         for (String tableName : tableNames) {
