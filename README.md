@@ -8,6 +8,12 @@
 
 ## Konfigurieren und Starten
 
+Temporär:
+
+```
+docker run -p8080:8080 -e S3_ACCESS_KEY=xxxx -e S3_SECRET_KEY=yyyy -e CONVERT_KEY=zzzz -v /path/to/datasearch.xml:/config/datasearch.xml sogis/sodata-flatgeobuf:latest
+```
+
 ## Externe Abhängigkeiten
 
 GDAL...

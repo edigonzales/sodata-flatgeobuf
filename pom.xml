@@ -99,11 +99,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <environmentVariables>
-                            <S3_ACCESS_KEY>AKIAWYSBER5CS7Q26EEG</S3_ACCESS_KEY>
-                        </environmentVariables>
-                    </configuration>
+        <configuration>
+          <classifier>exec</classifier>
+        </configuration>
+
             </plugin>
         </plugins>
     </build>

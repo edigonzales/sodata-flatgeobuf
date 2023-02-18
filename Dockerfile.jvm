@@ -1,0 +1,29 @@
+#FROM bellsoft/liberica-openjdk-debian:17.0.6
+FROM eclipse-temurin:17-jammy
+
+RUN apt-get update && apt-get -y install gdal-bin
+
+ARG UID=1001
+RUN adduser --system --uid $UID appuser
+
+WORKDIR /config
+RUN chown $UID:0 . && \
+    chmod 0775 . && \
+    ls -la
+
+VOLUME ["/config"]
+
+ENV HOME=/app
+WORKDIR $HOME
+
+RUN chown $UID $HOME \
+    && chmod "g+rwX" $HOME \
+    && chown $UID:root $HOME
+COPY --chown=$UID:root target/sodata-fgb-*-exec.jar $HOME/application.jar
+
+USER $UID
+EXPOSE 8080
+
+ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+
+CMD java -XX:MaxRAMPercentage=80.0 -jar application.jar

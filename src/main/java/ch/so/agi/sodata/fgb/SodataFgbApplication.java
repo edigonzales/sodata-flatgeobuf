@@ -8,11 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 @EnableScheduling
+@EnableAsync
 @SpringBootApplication
 public class SodataFgbApplication {
 
@@ -35,7 +37,8 @@ public class SodataFgbApplication {
     }
 
     // TODO
-    // Nur Zwecks erstmaligen Entwickeln hier.
+    // Nur Zwecks erstmaligen Entwickeln hier. 
+    // Funktioniert nicht beim Teste (context laden), da s3 credentials fehlen.
     // Später dauert die Konvertierung zu lange.
     // Vielleicht sowas:
     // Eventuell lohnt sich eine eigener Actuator. Dann kann man die Anwendung hochfahren und sie ist live UND ready.

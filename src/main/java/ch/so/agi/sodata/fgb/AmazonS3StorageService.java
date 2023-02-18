@@ -17,6 +17,8 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectAclRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -48,15 +50,15 @@ public class AmazonS3StorageService implements StorageService {
 
     @Override
     public void store(File file, String filename, String location) throws IOException {
-        System.out.println("eee: " + s3Region);
-
-//        try {
-//            RequestBody requestBody = RequestBody.fromInputStream(new FileInputStream(file), file.length());
-//            PutObjectResponse resp = s3client.putObject(PutObjectRequest.builder().bucket(s3Bucket).key("0000").build(), requestBody);            
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            throw new IOException("Could not store uploaded file: " + e.getMessage());
-//        }  
+        try {
+            String fileKey = location + "/" + filename;
+            RequestBody requestBody = RequestBody.fromInputStream(new FileInputStream(file), file.length());
+            PutObjectResponse resp = s3client.putObject(PutObjectRequest.builder().bucket(s3Bucket).key(fileKey).build(), requestBody);
+            s3client.putObjectAcl(PutObjectAclRequest.builder().bucket(s3Bucket).key(fileKey).acl(ObjectCannedACL.PUBLIC_READ).build());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Could not store uploaded file: " + e.getMessage());
+        }  
     }
 
     @Override
