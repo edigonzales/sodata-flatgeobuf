@@ -98,41 +98,26 @@ public class ConverterService {
                     if (themePublication.getModel() == null || themePublication.getModel().equalsIgnoreCase("")) {
                         continue; // ignore raster data
                     }
-                  
-                    
-
                     
                     try {
                         if (items.size() > 1) {
-                            // TODO
-                            // convert subunits
-                            
                             for (Item item : items) {
                                 String qualifiedIdentifier = item.getIdentifier() + "." + identifier;
                                 convertDataset(qualifiedIdentifier, themePublication);
                             }
-                            
-                            
-                        } else {
-                            
-                            log.info("CONVERT SINGLE");
-                            
-                            //convertDataset(identifier, themePublication);
+                        } else {                            
+                            convertDataset(identifier, themePublication);
                         }
-                    } catch (URISyntaxException | IOException | InterruptedException e) {
+                    } catch (URISyntaxException | IOException | InterruptedException | SQLException e) {
                         e.printStackTrace();
                         log.error(e.getMessage());
                     }
-                    
-                    
-                    
-                    
                 }
             }
         }        
     }
     
-    private void convertDataset(String identifier, ThemePublication themePublication) throws URISyntaxException, IOException, InterruptedException {
+    private void convertDataset(String identifier, ThemePublication themePublication) throws URISyntaxException, IOException, InterruptedException, SQLException {
         Path tmpWorkDir = Files.createTempDirectory(Paths.get(WORK_DIRECTORY), WORK_DIRECTORY_PREFIX);
         boolean subunits = themePublication.getItems().size() > 1 ? true : false;
         
@@ -160,7 +145,7 @@ public class ConverterService {
         }
         File gpkgFile = Paths.get(tmpWorkDir.toFile().getAbsolutePath(), identifier + ".gpkg").toFile();
         
-        // Alle Tabellen eruieren, die konvertiert werden sollen.
+        // Alle Tabellen eruieren, die konvertiert werden.
         List<String> tableNames = new ArrayList<String>();
         String url = "jdbc:sqlite:" + gpkgFile;
         try (Connection conn = DriverManager.getConnection(url)) {
@@ -170,14 +155,8 @@ public class ConverterService {
                         tableNames.add(rs.getString("tablename"));
                         log.debug("tablename: " + rs.getString("tablename"));
                     }
-            }  catch (SQLException e) {
-                log.error(e.getMessage());
-                return;
             }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            return;
-        }
+        } 
         
         // Konvertieren und hochladen
         String osTmpDir = System.getProperty("java.io.tmpdir");
@@ -200,8 +179,6 @@ public class ConverterService {
                     log.error("ogr2ogr did not run successfully.");
                     return;
                 }
-                
-                String itemIdentifier = identifier.substring(0, identifier.indexOf(".") - 1);
                 
                 String location;
                 if (subunits) {
