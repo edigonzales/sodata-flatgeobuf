@@ -50,13 +50,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
         if: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') && !env.ACT }}
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') && !env.ACT }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      #   if: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') && !env.ACT }}
 
       - name: Multi-platform build and push to Docker Container Registry
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229  # v2.7.0 (2021-10-22)
@@ -72,7 +72,3 @@ jobs:
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0.0
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0
-            ghcr.io/edigonzales/sodata-flatgeobuf:latest
-            ghcr.io/edigonzales/sodata-flatgeobuf:${{ env.VERSION }}
-            ghcr.io/edigonzales/sodata-flatgeobuf:0.0
-            ghcr.io/edigonzales/sodata-flatgeobuf:0
