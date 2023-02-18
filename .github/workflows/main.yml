@@ -7,7 +7,7 @@ on:
 jobs:
   build-jvm:
     env:
-      DOCKER_ACCOUNT: edigonzales
+      DOCKER_ACCOUNT: sogis
       DOCKER_REPO: sodata-flatgeobuf-jvm
       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}} 
@@ -72,7 +72,7 @@ jobs:
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0.0
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0
-            ghcr.io/${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:latest
-            ghcr.io/${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
-            ghcr.io/${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0.0
-            ghcr.io/${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0
+            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:latest
+            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
+            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:0.0
+            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:0
