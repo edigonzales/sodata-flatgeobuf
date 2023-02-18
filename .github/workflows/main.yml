@@ -72,7 +72,7 @@ jobs:
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0.0
             ${{ env.DOCKER_ACCOUNT }}/${{ env.DOCKER_REPO }}:0
-            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:latest
-            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:${{ env.VERSION }}
-            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:0.0
-            ghcr.io/edigonzales/${{ env.DOCKER_REPO }}:0
+            ghcr.io/edigonzales/sodata-flatgeobuf:latest
+            ghcr.io/edigonzales/sodata-flatgeobuf:${{ env.VERSION }}
+            ghcr.io/edigonzales/sodata-flatgeobuf:0.0
+            ghcr.io/edigonzales/sodata-flatgeobuf:0
