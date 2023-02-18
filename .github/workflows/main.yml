@@ -7,7 +7,7 @@ on:
 jobs:
   build-jvm:
     env:
-      DOCKER_ACCOUNT: sogis
+      DOCKER_ACCOUNT: edigonzales
       DOCKER_REPO: sodata-flatgeobuf-jvm
       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}} 
